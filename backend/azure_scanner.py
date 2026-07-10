@@ -3,7 +3,7 @@ import json
 import os
 import shutil
 
-Az = " Path to az cmd"
+AZ = r"C:\Program Files\Microsoft SDKs\Azure\CLI2\wbin\az.cmd"
 
 class AzureCLIError(Exception):
     pass
@@ -55,11 +55,9 @@ def get_vm_optimization_details(resource_group, vm_name):
         ])
         instance = instance_view.get("instanceView", [])
         statuses = instance.get("statuses", [])
-        # print(statuses)
         for status in statuses:
             if "PowerState" in status.get("code", ""):
                 vm_data["power_state"] = status.get("displayStatus", "VM deallocated")
-                # print(vm_data["power_state"])
     except Exception:
         pass
 
@@ -240,4 +238,3 @@ def scan_resource_group(resource_group):
             
         data.append(base_info)
     return data
-# get_vm_optimization_details("azure", "azure")
