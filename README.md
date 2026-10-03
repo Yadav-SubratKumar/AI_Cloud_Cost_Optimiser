@@ -368,9 +368,3 @@ http://localhost:8000/docs
 - SQLite is intended for the current local/development use case.
 
 ---
-
-## 📄 License
-
-No explicit open-source license is currently included with this project.
-
-Add an appropriate `LICENSE` file if the project is distributed publicly.
