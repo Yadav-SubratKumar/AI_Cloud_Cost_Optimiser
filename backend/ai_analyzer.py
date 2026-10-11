@@ -6,8 +6,10 @@ from google.genai import types
 
 load_dotenv()
 
-
+# --------------------------------------------------------------------
 # Gemini Configuration
+# --------------------------------------------------------------------
+
 API_KEY = os.getenv("GEMINI_API_KEY")
 
 if not API_KEY:
@@ -17,8 +19,10 @@ MODEL = os.getenv("GEMINI_MODEL", "gemini-2.5-flash")
 
 client = genai.Client(api_key=API_KEY)
 
-
+# --------------------------------------------------------------------
 # System Prompt
+# --------------------------------------------------------------------
+
 SYSTEM_PROMPT = """
 You are a Senior Azure Cloud Cost Optimization Consultant with deep expertise
 in Azure architecture, Azure Advisor recommendations, FinOps, and Microsoft
@@ -88,8 +92,11 @@ Schema:
 }
 """
 
-
+# --------------------------------------------------------------------
 # Analyzer
+# --------------------------------------------------------------------
+
+
 async def analyze_resources(resources):
     """
     Analyze Azure resources using Gemini and return structured
@@ -127,6 +134,7 @@ Azure Resources:
 
         result = json.loads(content)
 
+        # Safety defaults
         result.setdefault("summary", "")
         result.setdefault("estimated_monthly_savings_usd", 0)
         result.setdefault("issues", [])
