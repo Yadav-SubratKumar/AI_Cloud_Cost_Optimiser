@@ -15,6 +15,23 @@ export default function Report() {
     return null;
   }
 
+  async function downloadPdf() {
+    const analysisId = report.analysis_id;
+    if (!analysisId) return;
+    const token = localStorage.getItem("token") || sessionStorage.getItem("token");
+    const response = await fetch(`http://localhost:8000/api/reports/${analysisId}/pdf`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    if (!response.ok) throw new Error("Unable to generate PDF");
+    const blob = await response.blob();
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `cloud-cost-analysis-${analysisId}.pdf`;
+    link.click();
+    URL.revokeObjectURL(url);
+  }
+
   function badge(
     severity: string
   ) {
@@ -41,9 +58,12 @@ export default function Report() {
 
         <div className="bg-zinc-900 p-6 rounded-xl mb-8">
 
-          <h1 className="text-2xl mb-4">
-            Analysis Summary
-          </h1>
+          <div className="flex justify-between items-center mb-4">
+            <h1 className="text-2xl">Analysis Summary</h1>
+            {report.analysis_id && (
+              <button onClick={downloadPdf} className="bg-blue-600 px-4 py-2 rounded">Download PDF</button>
+            )}
+          </div>
 
           <p>
             Resources:

@@ -13,15 +13,17 @@ export default function Dashboard() {
   // Fix 10: loading/disabled state
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const role = localStorage.getItem("role") || "finance_manager";
+  const canScan = role === "cloud_admin" || role === "it_manager";
 
   useEffect(() => {
-    loadGroups();
-  }, []);
+    if (canScan) loadGroups();
+  }, [canScan]);
 
   async function loadGroups() {
     // Fix 8: try/catch on network call
     try {
-      const token = localStorage.getItem("token");
+      const token = localStorage.getItem("token") || sessionStorage.getItem("token");
       const res = await axios.get(
         "http://localhost:8000/api/resource-groups",
         { headers: { Authorization: `Bearer ${token}` } }
@@ -45,7 +47,7 @@ export default function Dashboard() {
     setDone(false);
 
     try {
-      const token = localStorage.getItem("token");
+      const token = localStorage.getItem("token") || sessionStorage.getItem("token");
 
       const start = await axios.post(
         "http://localhost:8000/api/analyze/start",
@@ -93,8 +95,17 @@ export default function Dashboard() {
       <Navbar />
 
       <div className="p-8 text-white">
+        <h1 className="text-3xl mb-2">Dashboard</h1>
+        <p className="text-zinc-400 mb-6">Welcome. Your role is {localStorage.getItem("role_name") || "User"}.</p>
 
-        {/* Fix 5: value={g} on every option */}
+        {!canScan ? (
+          <div className="max-w-2xl bg-zinc-900 rounded-xl p-6">
+            <h2 className="text-xl mb-2">Cost overview and reports</h2>
+            <p className="text-zinc-300 mb-4">Your role can review saved analyses and reports. Resource scanning is available to Cloud Administrators and IT Managers.</p>
+            <button onClick={() => navigate("/history")} className="bg-blue-600 px-4 py-2 rounded">View Analysis History</button>
+          </div>
+        ) : <>
+        {/* Resource scanning controls are shown only to roles permitted to scan. */}
         <select
           className="bg-zinc-900 p-3 rounded"
           value={selected}
@@ -131,7 +142,7 @@ export default function Dashboard() {
             <ProgressTracker steps={progress} done={done} />
           </div>
         )}
-
+        </>}
       </div>
     </>
   );

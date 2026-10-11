@@ -15,7 +15,7 @@ export default function History() {
   async function loadHistory() {
     // Fix 8: try/catch
     try {
-      const token = localStorage.getItem("token");
+      const token = localStorage.getItem("token") || sessionStorage.getItem("token");
       const res = await axios.get("http://localhost:8000/api/history", {
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -58,6 +58,7 @@ export default function History() {
                 navigate("/report", {
                   state: {
                     analysis: analysisResult,
+                    analysis_id: item.id,
                     resource_count: item.resources_scanned,
                   },
                 })
