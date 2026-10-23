@@ -368,3 +368,11 @@ http://localhost:8000/docs
 - SQLite is intended for the current local/development use case.
 
 ---
+
+## Authentication and roles
+
+- Signup accepts an email, a password of at least 8 characters, and a selected role (`cloud_admin`, `finance_manager`, `it_manager`, or `executive`).
+- Successful signup and login both redirect to the Dashboard. The Dashboard shows resource-scanning controls only to Cloud Administrators and IT Managers; other roles can navigate to history and reports.
+- Login supports Remember Me. Password reset routes remain available from the login screen.
+- **Demo security note:** because this project exposes role selection on public signup, a person can choose Cloud Administrator. For production, restrict privileged-role assignment to an existing administrator or an invitation/approval flow.
+
